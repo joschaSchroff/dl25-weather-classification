@@ -27,8 +27,9 @@ class WeatherDataset(Dataset):
         for label, class_name in enumerate(self.classes):
             class_path = os.path.join(root_dir, class_name)
             for img_name in os.listdir(class_path):
-                self.image_paths.append(os.path.join(class_path, img_name))
-                self.labels.append(label)
+                if img_name.endswith(".jpg"):
+                    self.image_paths.append(os.path.join(class_path, img_name))
+                    self.labels.append(label)
 
     def __len__(self):
         return len(self.image_paths)
@@ -70,6 +71,14 @@ class WeatherDataModule(L.LightningDataModule):
     
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+
+
+def get_transforms():
+    return transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ])
 
 if __name__ == "__main__":
     # path = download_dataset(path="data")

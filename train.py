@@ -5,7 +5,7 @@ import wandb
 from pytorch_lightning.loggers import WandbLogger
 
 def get_wandb_logger():
-    wandb.init(entity="joscha-schroff", project="weather-classification")
+    wandb.init(entity="dl25-weather", project="weather-classification")
     wandb_logger = WandbLogger(name='weather-classification',project='weather-classification')
     return wandb_logger
 

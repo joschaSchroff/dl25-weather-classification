@@ -17,3 +17,7 @@ def train_model(model, train_loader, val_loader, epochs):
     logger = get_wandb_logger()
     trainer = get_trainer(epochs, logger)
     trainer.fit(model, train_loader, val_loader)
+
+if __name__ == "__main__":
+    model = WeatherModel()
+    train_model(model, None, None, 10)

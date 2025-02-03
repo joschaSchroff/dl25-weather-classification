@@ -2,7 +2,10 @@ import lightning as L
 import torch.nn as nn
 import torch
 import torchvision.models as models
-from torchvision.models.resnet import ResNet, ResNet50_Weights
+from torchvision.models.resnet import ResNet50_Weights
+from torchvision.models.efficientnet import EfficientNet_B0_Weights
+from torchvision.models.mobilenet import MobileNet_V2_Weights
+from torchvision.models.vision_transformer import ViT_B_16_Weights
 from torchmetrics.classification import Accuracy, F1Score
 from sklearn.metrics import f1_score, accuracy_score
 
@@ -62,7 +65,16 @@ def get_model(model_name, num_classes, learning_rate):
         model.fc = nn.Linear(model.fc.in_features, num_classes)
         return WeatherModel(model, learning_rate, num_classes)
     elif model_name == "efficientnet":
-        model = models.efficientnet_b0(pretrained=True)
+        model = models.efficientnet_b0(weights=EfficientNet_B0_Weights.IMAGENET1K_V1)
+        model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
+        return WeatherModel(model, learning_rate, num_classes)
+    elif model_name == "mobilenet":
+        model = models.mobilenet_v2(weights=MobileNet_V2_Weights.IMAGENET1K_V1)
+        model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
+        return WeatherModel(model, learning_rate, num_classes)
+    elif model_name == "vit":
+        model = models.vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
+        model.heads[0] = nn.Linear(model.heads[0].in_features, num_classes)
         return WeatherModel(model, learning_rate, num_classes)
     else:
         raise ValueError("Model not found")

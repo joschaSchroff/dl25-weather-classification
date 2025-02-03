@@ -4,6 +4,7 @@ import torch
 import torchvision.models as models
 from torchvision.models.resnet import ResNet, ResNet50_Weights
 from torchmetrics.classification import Accuracy, F1Score
+from sklearn.metrics import f1_score, accuracy_score
 
 
 
@@ -14,7 +15,7 @@ class WeatherModel(L.LightningModule):
         self.criterion = nn.CrossEntropyLoss()
         self.learning_rate = learning_rate
         self.accuracy = Accuracy(task="multiclass", num_classes=num_classes)
-        self.f1 = F1Score(task="multiclass", num_classes=num_classes)
+        self.f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
         self.outputs = []
     
     def forward(self,x):
@@ -39,11 +40,15 @@ class WeatherModel(L.LightningModule):
         y = torch.cat([out[0] for out in self.outputs])
         y_hat = torch.cat([out[1] for out in self.outputs])
         acc = self.accuracy(y_hat, y)
+        acc_sklearn = accuracy_score(y.cpu(), y_hat.cpu().argmax(dim=1))
         f1 = self.f1(y_hat, y)
-        self.log("val_acc", acc)
+        f1_sklearn = f1_score(y.cpu(), y_hat.cpu().argmax(dim=1), average="macro")
         self.log("val_f1", f1)
-        print(f"Validation Accuracy: {acc}")
+        self.log("val_acc", acc)
         print(f"Validation F1 Score: {f1}")
+        print(f"Validation F1 Score (sklearn): {f1_sklearn}")
+        print(f"Validation Accuracy: {acc}")
+        print(f"Validation Accuracy (sklearn): {acc_sklearn}")
         
 
     def configure_optimizers(self):

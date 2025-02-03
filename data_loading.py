@@ -9,8 +9,6 @@ def download_dataset():
     print("Path to dataset files:", path)
 
 
-
-
 if __name__ == "__main__":
     #download_dataset()
     pass

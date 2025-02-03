@@ -5,7 +5,7 @@ import torch
 
 
 
-class Model(L.LightningModule):
+class WeatherModel(L.LightningModule):
     def __init__(self,model,learning_rate):
         super(LightningModel, self).__init__()
         self.model = model

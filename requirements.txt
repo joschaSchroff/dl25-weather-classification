@@ -64,3 +64,4 @@ tuf==5.1.0
 typing_extensions==4.12.2
 urllib3==2.3.0
 yarl==1.18.3
+simple_parsing==0.1.7

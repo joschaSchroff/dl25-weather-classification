@@ -1,0 +1,11 @@
+num_workers: 4
+accelerator: 'auto'
+num_epochs: 10
+batch_size: 32
+learning_rate: 0.001
+model_name: 'mobilenet'
+num_classes: 11
+data_dir: '/home/joscha/deep-learning/weather-dataset/3/dataset'
+wandb_name: 'mobilenet'
+wandb_project: 'compare-models'
+wandb_entity: 'dl25-weather'

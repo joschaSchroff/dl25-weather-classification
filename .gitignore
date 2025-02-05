@@ -172,3 +172,5 @@ cython_debug/
 
 # Our own configuration
 data/
+lightning_logs/
+wandb/

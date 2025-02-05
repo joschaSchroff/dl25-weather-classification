@@ -7,9 +7,6 @@ from torchvision.models.efficientnet import EfficientNet_B0_Weights
 from torchvision.models.mobilenet import MobileNet_V2_Weights
 from torchvision.models.vision_transformer import ViT_B_16_Weights
 from torchmetrics.classification import Accuracy, F1Score
-from sklearn.metrics import f1_score, accuracy_score
-
-
 
 class WeatherModel(L.LightningModule):
     def __init__(self,model,learning_rate,num_classes):
@@ -28,30 +25,29 @@ class WeatherModel(L.LightningModule):
         x, y = batch
         y_hat = self.model(x)
         loss = self.criterion(y_hat, y)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_hat = self.model(x)
+
         loss = self.criterion(y_hat, y)
-        self.log("val_loss", loss)
-        self.outputs.append((y, y_hat))
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
+
+        self.accuracy.update(y_hat, y)
+        self.f1.update(y_hat, y)
         return loss
     
     def on_validation_epoch_end(self):
-        y = torch.cat([out[0] for out in self.outputs])
-        y_hat = torch.cat([out[1] for out in self.outputs])
-        acc = self.accuracy(y_hat, y)
-        acc_sklearn = accuracy_score(y.cpu(), y_hat.cpu().argmax(dim=1))
-        f1 = self.f1(y_hat, y)
-        f1_sklearn = f1_score(y.cpu(), y_hat.cpu().argmax(dim=1), average="macro")
-        self.log("val_f1", f1)
+        acc = self.accuracy.compute()
+        f1 = self.f1.compute()
+
         self.log("val_acc", acc)
-        print(f"Validation F1 Score: {f1}")
-        print(f"Validation F1 Score (sklearn): {f1_sklearn}")
-        print(f"Validation Accuracy: {acc}")
-        print(f"Validation Accuracy (sklearn): {acc_sklearn}")
+        self.log("val_f1", f1)
+
+        self.accuracy.reset()
+        self.f1.reset()
         
 
     def configure_optimizers(self):

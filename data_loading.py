@@ -4,12 +4,32 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms
 from PIL import Image
 import lightning as L
+from typing import List, Tuple
 
 
 def download_dataset(path="data"):
     # Download latest version
     path = kagglehub.dataset_download("jehanbhathena/weather-dataset", path=path)
     print("Path to dataset files:", path)
+
+def load_image_paths_and_labels(root_dir: str) -> Tuple[List[str], List[int], List[str]]:
+    """
+    Returns:
+        Tuple[List[str], List[int], List[str]]: List of image paths, corresponding labels, and class names.
+    """
+    classes = sorted([d for d in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, d))])
+    image_paths, labels = [], []
+    
+    for label, class_name in enumerate(classes):
+        class_path = os.path.join(root_dir, class_name)
+        image_paths.extend(
+            os.path.join(class_path, img_name)
+            for img_name in os.listdir(class_path)
+            if img_name.endswith(".jpg")
+        )
+        labels.extend([label] * len(os.listdir(class_path)))
+    
+    return image_paths, labels, classes
 
 class WeatherDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -18,18 +38,8 @@ class WeatherDataset(Dataset):
             root_dir (str): Root directory of the dataset containing class folders.
             transform (callable, optional): Optional transform to be applied on an image.
         """
-        self.root_dir = root_dir
         self.transform = transform
-        self.classes = sorted(os.listdir(root_dir))
-        self.image_paths = []
-        self.labels = []
-
-        for label, class_name in enumerate(self.classes):
-            class_path = os.path.join(root_dir, class_name)
-            for img_name in os.listdir(class_path):
-                if img_name.endswith(".jpg"):
-                    self.image_paths.append(os.path.join(class_path, img_name))
-                    self.labels.append(label)
+        self.image_paths, self.labels, self.classes = load_image_paths_and_labels(root_dir)
 
     def __len__(self):
         return len(self.image_paths)
@@ -85,16 +95,13 @@ def get_transforms():
 if __name__ == "__main__":
     # path = download_dataset(path="data")
     path = "data"
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
 
-    data_module = WeatherDataModule(data_dir=path, transform=transform)
+    data_module = WeatherDataModule(data_dir=path, transform=get_transforms())
     data_module.setup()
     train_loader = data_module.train_dataloader()
 
-    for batch in train_loader:
-        print(batch[0].shape)
-        break
+    # Iterate over first 10 batches and print the shape of each batch
+    for i, (images, labels) in enumerate(train_loader):
+        if i == 10:
+            break
+        print(f"Batch {i}: {images.shape}")

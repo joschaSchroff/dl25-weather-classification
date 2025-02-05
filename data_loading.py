@@ -22,12 +22,11 @@ def load_image_paths_and_labels(root_dir: str) -> Tuple[List[str], List[int], Li
     
     for label, class_name in enumerate(classes):
         class_path = os.path.join(root_dir, class_name)
-        image_paths.extend(
-            os.path.join(class_path, img_name)
-            for img_name in os.listdir(class_path)
-            if img_name.endswith(".jpg")
+        file_names = sorted(
+            [img_name for img_name in os.listdir(class_path) if img_name.endswith(".jpg")]
         )
-        labels.extend([label] * len(os.listdir(class_path)))
+        image_paths.extend([os.path.join(class_path, img_name) for img_name in file_names])
+        labels.extend([label] * len(file_names))
     
     return image_paths, labels, classes
 
@@ -64,13 +63,13 @@ class WeatherDataModule(L.LightningDataModule):
         self.transform = transform
 
     def setup(self, stage=None):
-        full_dataset = WeatherDataset(root_dir=self.data_dir, transform=self.transform) # Possible Transforms
+        full_dataset = WeatherDataset(root_dir=self.data_dir, transform=self.transform)
 
         # Split dataset into training (70%), validation (15%) and test (15%) sets
         train_size = int(0.7 * len(full_dataset))
         val_size = int(0.15 * len(full_dataset))
         test_size = len(full_dataset) - train_size - val_size
-        self.train_dataset, self.val_dataset, self.test_dataset = random_split(full_dataset, [train_size, val_size, test_size])
+        self.train_dataset, self.val_dataset, self.test_dataset = random_split(full_dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42))
         
 
     def train_dataloader(self):

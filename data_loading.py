@@ -8,9 +8,12 @@ import lightning as L
 from typing import List, Tuple
 
 
-def download_dataset(path="data"):
+def download_dataset(path="./data/weather-dataset"):
     # Download latest version
-    path = kagglehub.dataset_download("jehanbhathena/weather-dataset", path=path)
+    download_path = kagglehub.dataset_download("jehanbhathena/weather-dataset")
+    os.makedirs(path, exist_ok=True)
+    download_path = os.path.join(download_path, "dataset")
+    os.rename(download_path, path)
     print("Path to dataset files:", path)
 
 def load_image_paths_and_labels(root_dir: str) -> Tuple[List[str], List[int], List[str]]:
@@ -93,7 +96,7 @@ def get_transforms():
     ])
 
 if __name__ == "__main__":
-    # path = download_dataset(path="data")
+    # path = download_dataset(path="./data/weather-dataset")
     path = "data"
 
     data_module = WeatherDataModule(data_dir=path, transform=get_transforms())

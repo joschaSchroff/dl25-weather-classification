@@ -7,7 +7,7 @@ model_name: 'efficientnet'
 num_classes: 11
 val_before_train: True
 
-data_dir: '/home/joscha/deep-learning/weather-dataset/3/dataset'
+data_dir: './data/weather-dataset'
 
 wandb_name: 'efficientnet'
 wandb_project: 'compare-models'

@@ -10,7 +10,7 @@ from simple_parsing import parse
 
 
 def get_wandb_logger(args: TrainArgs):
-    wandb.init(entity=args.wandb_entity, project=args.wandb_project, name=args.wandb_name)
+    wandb.init(entity=args.wandb_entity, project=args.wandb_project, name=args.wandb_name, config=args)
     wandb_logger = WandbLogger()
     return wandb_logger
 
@@ -24,7 +24,10 @@ def get_trainer(epochs, logger, device):
 def train_model(model, data_module, args: TrainArgs):
     logger = get_wandb_logger(args)
     trainer = get_trainer(args.num_epochs, logger, args.accelerator)
+    if args.val_before_train:
+        trainer.validate(model, datamodule=data_module)
     trainer.fit(model, datamodule=data_module)
+    wandb.finish()
 
 
 def main(args: TrainArgs):

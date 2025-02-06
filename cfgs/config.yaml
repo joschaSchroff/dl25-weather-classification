@@ -5,7 +5,10 @@ batch_size: 32
 learning_rate: 0.001
 model_name: 'efficientnet'
 num_classes: 11
+val_before_train: True
+
 data_dir: '/home/joscha/deep-learning/weather-dataset/3/dataset'
+
 wandb_name: 'efficientnet'
 wandb_project: 'compare-models'
 wandb_entity: 'dl25-weather'

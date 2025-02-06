@@ -12,6 +12,7 @@ class TrainArgs:
     learning_rate: float = field(type=float, default=0.001)
     model_name: str = field(type=str, default="efficientnet")
     num_classes: int = field(type=int, default=11)
+    val_before_train: bool = field(type=bool, default=True)
 
     #Data
     data_dir: str = field(type=str, default="./data")

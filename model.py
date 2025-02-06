@@ -6,6 +6,7 @@ from torchvision.models.resnet import ResNet50_Weights
 from torchvision.models.efficientnet import EfficientNet_B0_Weights, EfficientNet_B1_Weights
 from torchvision.models.mobilenet import MobileNet_V2_Weights
 from torchvision.models.vision_transformer import ViT_B_16_Weights
+from torchvision.models.swin_transformer import Swin_T_Weights
 from torchmetrics.classification import Accuracy, F1Score
 
 class WeatherModel(L.LightningModule):
@@ -75,6 +76,10 @@ def get_model(model_name, num_classes, learning_rate):
     elif model_name == "vit":
         model = models.vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
         model.heads[0] = nn.Linear(model.heads[0].in_features, num_classes)
+        return WeatherModel(model, learning_rate, num_classes)
+    elif model_name == "swin":
+        model = models.swin_t(Swin_T_Weights.IMAGENET1K_V1)
+        model.head = nn.Linear(model.head.in_features, num_classes)
         return WeatherModel(model, learning_rate, num_classes)
     else:
         raise ValueError("Model not found")

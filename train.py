@@ -10,6 +10,7 @@ from simple_parsing import parse
 
 
 def get_wandb_logger(args: TrainArgs):
+    wandb.finish()
     wandb.init(entity=args.wandb_entity, project=args.wandb_project, name=args.wandb_name, config=args)
     wandb_logger = WandbLogger()
     return wandb_logger

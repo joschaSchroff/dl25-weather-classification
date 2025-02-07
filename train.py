@@ -3,7 +3,7 @@ from model import get_model
 import torch
 import wandb
 from pytorch_lightning.loggers import WandbLogger
-from data_loading import WeatherDataModule, get_transforms
+from data_loading import WeatherDataModule, get_transforms, get_val_transforms
 from args import TrainArgs
 from simple_parsing import parse
 
@@ -34,7 +34,7 @@ def train_model(model, data_module, args: TrainArgs):
 def main(args: TrainArgs):
     seed_everything(args.seed, workers=True)
     model = get_model(args.model_name, args.num_classes, args.learning_rate)
-    data_module = WeatherDataModule(data_dir=args.data_dir, batch_size=args.batch_size, num_workers=args.num_workers, transform=get_transforms())
+    data_module = WeatherDataModule(data_dir=args.data_dir, batch_size=args.batch_size, num_workers=args.num_workers, transform=get_transforms(), val_transform=get_val_transforms())
     train_model(model, data_module, args)
 
 

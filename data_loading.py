@@ -59,21 +59,26 @@ class WeatherDataset(Dataset):
         return image, label
 
 class WeatherDataModule(L.LightningDataModule):
-    def __init__(self, data_dir, batch_size=32, num_workers=4, transform=None):
+    def __init__(self, data_dir, batch_size=32, num_workers=4, transform=None, val_transform=None):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.transform = transform
+        self.val_transform = val_transform
 
     def setup(self, stage=None):
-        full_dataset = WeatherDataset(root_dir=self.data_dir, transform=self.transform)
+        full_dataset = WeatherDataset(root_dir=self.data_dir, transform=None)
 
         # Split dataset into training (70%), validation (15%) and test (15%) sets
         train_size = int(0.7 * len(full_dataset))
         val_size = int(0.15 * len(full_dataset))
         test_size = len(full_dataset) - train_size - val_size
         self.train_dataset, self.val_dataset, self.test_dataset = random_split(full_dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42))
+        self.train_dataset.dataset.transform = self.transform
+        self.val_dataset.dataset.transform = self.val_transform
+        self.test_dataset.dataset.transform = self.val_transform
+
         
 
     def train_dataloader(self):
@@ -88,9 +93,17 @@ class WeatherDataModule(L.LightningDataModule):
 
 def get_transforms():
     return transforms.Compose([
-        transforms.Resize((224, 224)),
+        #transforms.Resize((224, 224)),
+        transforms.RandomResizedCrop(size=(224,224), scale=(0.5, 1.0)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ])
+
+def get_val_transforms():
+    return transforms.Compose([
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])

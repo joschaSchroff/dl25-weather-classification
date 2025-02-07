@@ -1,4 +1,4 @@
-num_workers: 4
+num_workers: 1
 accelerator: 'auto'
 num_epochs: 10
 batch_size: 32

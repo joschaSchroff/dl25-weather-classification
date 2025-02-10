@@ -6,6 +6,7 @@ from pytorch_lightning.loggers import WandbLogger
 from data_loading import WeatherDataModule, get_transforms, get_val_transforms
 from args import TrainArgs
 from simple_parsing import parse
+from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 
 
 
@@ -15,16 +16,22 @@ def get_wandb_logger(args: TrainArgs):
     wandb_logger = WandbLogger()
     return wandb_logger
 
-def get_trainer(epochs, logger, device):
+def get_trainer(epochs, logger, device, callbacks):
     if(device == 'auto'):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     elif(device == 'cuda'):
         assert torch.cuda.is_available(), "CUDA is not available"
-    return Trainer(max_epochs=epochs, logger=logger, accelerator=device)
+    return Trainer(max_epochs=epochs, logger=logger, accelerator=device, callbacks=callbacks)
 
+def get_callbacks(args: TrainArgs):
+    if(args.early_stopping):
+        return [EarlyStopping(monitor=args.early_stopping_metric, patience=args.early_stopping_patience, mode=args.early_stopping_mode, min_delta=args.early_stopping_delta)]
+    return []
+    
 def train_model(model, data_module, args: TrainArgs):
     logger = get_wandb_logger(args)
-    trainer = get_trainer(args.num_epochs, logger, args.accelerator)
+    callbacks = get_callbacks(args)
+    trainer = get_trainer(args.num_epochs, logger, args.accelerator, callbacks)
     if args.val_before_train:
         trainer.validate(model, datamodule=data_module)
     trainer.fit(model, datamodule=data_module)

@@ -14,6 +14,14 @@ class TrainArgs:
     num_classes: int = field(type=int, default=11)
     val_before_train: bool = field(type=bool, default=True)
 
+    early_stopping: bool = field(type=bool, default=True)
+    early_stopping_patience: int = field(type=int, default=3)
+    early_stopping_metric: str = field(type=str, default="val_loss")
+    early_stopping_mode: str = field(type=str, default="min")
+    early_stopping_delta: float = field(type=float, default=0.001)
+
+
+
     #Data
     data_dir: str = field(type=str, default="./data")
 

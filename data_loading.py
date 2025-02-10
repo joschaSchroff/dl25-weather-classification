@@ -97,6 +97,7 @@ def get_transforms():
         transforms.RandomResizedCrop(size=(224,224), scale=(0.5, 1.0)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=(0.5,1.5),contrast=(0.5,1.0),saturation=(0.5,1.5),hue=(-0.1,0.1)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
@@ -110,7 +111,7 @@ def get_val_transforms():
 
 if __name__ == "__main__":
     # path = download_dataset(path="./data/weather-dataset")
-    path = "data"
+    path = "./data/weather-dataset"
 
     data_module = WeatherDataModule(data_dir=path, transform=get_transforms())
     data_module.setup()

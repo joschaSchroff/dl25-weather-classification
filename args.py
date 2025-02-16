@@ -24,6 +24,8 @@ class TrainArgs:
 
     #Data
     data_dir: str = field(type=str, default="./data")
+    save_model: bool = field(type=bool, default=False)
+    save_model_path: str = field(type=str, default="./models")
 
     #Wandb
     wandb_project: str = field(type=str, default='weather-classification')

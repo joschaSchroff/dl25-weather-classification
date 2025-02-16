@@ -1,8 +1,10 @@
-num_workers: 1
+num_workers: 4
 accelerator: 'auto'
 num_epochs: 10
 batch_size: 32
-learning_rate: 0.0001
+learning_rate: 0.001
+lr_step_size: 50
+lr_gamma: 0.5
 model_name: 'resnet50'
 num_classes: 11
 val_before_train: True
@@ -13,6 +15,8 @@ early_stopping_mode: 'min'
 early_stopping_delta: 0.001
 
 data_dir: './data/weather-dataset'
+save_model: True
+save_model_path: './models'
 
 wandb_name: 'resnet50'
 wandb_project: 'compare-models'

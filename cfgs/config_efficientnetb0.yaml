@@ -3,9 +3,9 @@ accelerator: 'auto'
 num_epochs: 10
 batch_size: 32
 learning_rate: 0.001
-lr_step_size: 50
+lr_step_size: 100
 lr_gamma: 0.5
-model_name: 'mobilenet'
+model_name: 'efficientnetb0'
 num_classes: 11
 val_before_train: True
 early_stopping: True
@@ -18,6 +18,6 @@ data_dir: './data/weather-dataset'
 save_model: True
 save_model_path: './models'
 
-wandb_name: 'mobilenet'
+wandb_name: 'efficientnetb0'
 wandb_project: 'compare-models'
 wandb_entity: 'dl25-weather'

@@ -8,6 +8,7 @@ from args import TrainArgs
 from simple_parsing import parse
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from lightning.pytorch.callbacks.lr_monitor import LearningRateMonitor
+from lightning.pytorch.callbacks import ModelCheckpoint
 
 
 
@@ -30,6 +31,17 @@ def get_callbacks(args: TrainArgs):
     if(args.early_stopping):
         early_stopping = EarlyStopping(monitor=args.early_stopping_metric, patience=args.early_stopping_patience, mode=args.early_stopping_mode, min_delta=args.early_stopping_delta)
         callbacks.append(early_stopping)
+    if(args.save_model):
+        checkpoint_callback = ModelCheckpoint(
+            dirpath=args.save_model_path,
+            filename=args.model_name + '-{val_acc:.2f}',
+            save_top_k=1,
+            verbose=True,
+            monitor='val_acc',
+            mode='max',
+            save_weights_only=True,
+        )
+        callbacks.append(checkpoint_callback)
     return callbacks
     
 def train_model(model, data_module, args: TrainArgs):

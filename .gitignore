@@ -172,5 +172,6 @@ cython_debug/
 
 # Our own configuration
 data/
+models/
 lightning_logs/
 wandb/

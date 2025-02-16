@@ -66,7 +66,7 @@ class WeatherModel(L.LightningModule):
         }
     
 
-def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma):
+def get_base_model(model_name, num_classes):
     if model_name == "resnet50":
         model = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
         model.fc = nn.Linear(model.fc.in_features, num_classes)
@@ -87,5 +87,8 @@ def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma):
         model.head = nn.Linear(model.head.in_features, num_classes)
     else:
         raise ValueError("Model not found")
+    return model
     
+def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma):
+    model = get_base_model(model_name, num_classes)
     return WeatherModel(model, learning_rate, num_classes, lr_step_size, lr_gamma)

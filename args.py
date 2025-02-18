@@ -24,6 +24,7 @@ class TrainArgs:
 
     #Data
     data_dir: str = field(type=str, default="./data")
+    use_class_weights: bool = field(type=bool, default=True)
     save_model: bool = field(type=bool, default=False)
     save_model_path: str = field(type=str, default="./models")
 

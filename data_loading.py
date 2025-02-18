@@ -6,7 +6,8 @@ from torchvision import transforms
 from PIL import Image
 import lightning as L
 from typing import List, Tuple
-
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
 
 def download_dataset(path="./data/weather-dataset"):
     # Download latest version
@@ -78,8 +79,11 @@ class WeatherDataModule(L.LightningDataModule):
         self.train_dataset.dataset.transform = self.transform
         self.val_dataset.dataset.transform = self.val_transform
         self.test_dataset.dataset.transform = self.val_transform
+        # class weights for train
+        labels = [label for _, label in self.train_dataset]
+        class_weights = compute_class_weight("balanced", classes=np.unique(labels), y=labels)
+        self.class_weights = torch.tensor(class_weights, dtype=torch.float32)
 
-        
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
@@ -89,6 +93,9 @@ class WeatherDataModule(L.LightningDataModule):
     
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+    
+    def get_class_weights(self):
+        return self.class_weights
 
 
 def get_transforms():

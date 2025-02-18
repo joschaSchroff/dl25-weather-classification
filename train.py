@@ -56,8 +56,10 @@ def train_model(model, data_module, args: TrainArgs):
 
 def main(args: TrainArgs):
     seed_everything(args.seed, workers=True)
-    model = get_model(args.model_name, args.num_classes, args.learning_rate, args.lr_step_size, args.lr_gamma)
     data_module = WeatherDataModule(data_dir=args.data_dir, batch_size=args.batch_size, num_workers=args.num_workers, transform=get_transforms(), val_transform=get_val_transforms())
+    data_module.setup()
+    class_weights = data_module.get_class_weights() if args.use_class_weights else None
+    model = get_model(args.model_name, args.num_classes, args.learning_rate, args.lr_step_size, args.lr_gamma, class_weights)
     train_model(model, data_module, args)
 
 

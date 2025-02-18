@@ -11,10 +11,10 @@ from torchmetrics.classification import Accuracy, F1Score
 from torch.optim.lr_scheduler import StepLR
 
 class WeatherModel(L.LightningModule):
-    def __init__(self,model,learning_rate,num_classes,lr_step_size,lr_gamma):
+    def __init__(self,model,learning_rate,num_classes,lr_step_size,lr_gamma,class_weights = None):
         super().__init__()
         self.model = model
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = nn.CrossEntropyLoss(weight=class_weights)
         self.learning_rate = learning_rate
         self.lr_step_size = lr_step_size
         self.lr_gamma = lr_gamma
@@ -89,6 +89,6 @@ def get_base_model(model_name, num_classes):
         raise ValueError("Model not found")
     return model
     
-def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma):
+def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma, class_weights=None):
     model = get_base_model(model_name, num_classes)
-    return WeatherModel(model, learning_rate, num_classes, lr_step_size, lr_gamma)
+    return WeatherModel(model, learning_rate, num_classes, lr_step_size, lr_gamma, class_weights)

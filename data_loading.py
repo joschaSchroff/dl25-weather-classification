@@ -106,14 +106,16 @@ def get_transforms():
         transforms.RandomRotation(10),
         transforms.ColorJitter(brightness=(0.5,1.5),contrast=(0.5,1.0),saturation=(0.5,1.5),hue=(-0.1,0.1)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # imagenet
+        # transforms.Normalize(mean=[0.517, 0.525, 0.505], std=[0.197, 0.191, 0.198]) # our dataset
     ])
 
 def get_val_transforms():
     return transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # imagenet
+        # transforms.Normalize(mean=[0.517, 0.525, 0.505], std=[0.197, 0.191, 0.198]) # our dataset
     ])
 
 if __name__ == "__main__":

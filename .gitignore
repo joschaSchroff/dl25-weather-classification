@@ -175,3 +175,4 @@ data/
 models/
 lightning_logs/
 wandb/
+sweep.json

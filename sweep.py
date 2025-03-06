@@ -13,18 +13,18 @@ def check_if_allready_done(args):
     with open('sweep.json') as f:
         data = json.load(f)
         for item in data:
-            if item == args:
+            if item == args.wandb_name:
                 return True
     return False
 
 def add_to_json(args):
     with open('sweep.json') as f:
         data = json.load(f)
-        data.append(args)
+        data.append(args.wandb_name)
     with open('sweep.json', 'w') as f:
         json.dump(data, f)
 
-def sweep():
+def sweep(pause_time=600, pause_every=10):
     num_workers = [4]
     accelerator = ['cuda']
     seed = [42]
@@ -41,13 +41,14 @@ def sweep():
     early_stopping_metric = ['val_loss']
     early_stopping_mode = ['min']
     early_stopping_delta = [0.001]
-    data_dir = ['./data']
+    data_dir = ['./data/weather-dataset']
     use_class_weights = [True,False]
     save_model = [False]
     save_model_path = ['./models']
     wandb_project = ['sweep-models']
     wandb_entity = ['dl25-weather']
 
+    run_counter = 0
     for lr in learning_rate:
         for lr_g in lr_gamma:
             for model in model_name:
@@ -83,7 +84,10 @@ def sweep():
                         continue
                     train.main(args)
                     add_to_json(args)
-            time.sleep(600) # sleep for 10 minutes for gpu to cool down
+                    run_counter += 1
+                    if run_counter % pause_every == 0:
+                        print(f"Waiting for {pause_time} seconds")
+                        time.sleep(pause_time) # sleep for x seconds for gpu to cool down
 
 
 if __name__ == "__main__":

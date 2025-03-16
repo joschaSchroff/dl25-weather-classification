@@ -10,7 +10,7 @@ The dataset has the following class distribution:
 ![Class Distribution](plots/class_distribution.png)
 
 ## Model
-We used five different model architectures to classify the weather conditions:\
+We used five different model architectures to classify the weather conditions:
 1. ResNet50
 2. EfficientNetB0
 3. EfficientNetB1

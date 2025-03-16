@@ -10,12 +10,16 @@ The dataset has the following class distribution:
 ![Class Distribution](plots/class_distribution.png)
 
 ## Model
+### Architecture
 We used five different model architectures to classify the weather conditions:
 1. ResNet50
 2. EfficientNetB0
 3. EfficientNetB1
 4. MobileNetV2
 5. Swin-T
+
+### Weights
+Our trained weights are available [here](https://nextcloud.hpi.de/s/wyayfgaR7yJc8B4) with the password: `XY5oAQPncq`.
 
 ## Results
 ![Results](plots/model_performance.png)

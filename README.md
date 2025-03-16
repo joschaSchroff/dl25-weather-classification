@@ -1,21 +1,29 @@
 # Deep Learning - Weather Classification
 This project was created as the final project for the university course **Deep Learning** at the Hasso Plattner Institute.\
-The goal of this project is to classify weather conditions just given image data using the Weather Phenomenon Database (WEAPD).\
+The goal of this project is to classify weather conditions just given image data using the Weather Phenomenon Database (WEAPD).
 
 ## Data
 The data used in this project is the [Weather Phenomenon Database (WEAPD)](https://www.kaggle.com/datasets/jehanbhathena/weather-dataset/data) which is a dataset of weather images.\
+
+Xiao, Haixia. (2021). *Weather phenomenon database (WEAPD)* (Version V1). Harvard Dataverse. [https://doi.org/10.7910/DVN/M8JQCR](https://doi.org/10.7910/DVN/M8JQCR)
+
 The dataset contains 11 classes of weather conditions:\
 Dew, Fogsmog, Frost, Glaze, Hail, Lightning, Rain, Rainbow, Rime, Sandstorm, Snow\
 The dataset has the following class distribution:
 ![Class Distribution](plots/class_distribution.png)
 
+
 ## Model
-We used five different model architectures to classify the weather conditions:\
+### Architecture
+We used five different model architectures to classify the weather conditions:
 1. ResNet50
 2. EfficientNetB0
 3. EfficientNetB1
 4. MobileNetV2
 5. Swin-T
+
+### Weights
+Our trained weights are available [here](https://nextcloud.hpi.de/s/wyayfgaR7yJc8B4) with the password: `XY5oAQPncq`.
 
 ## Results
 ![Results](plots/model_performance.png)

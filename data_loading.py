@@ -100,7 +100,6 @@ class WeatherDataModule(L.LightningDataModule):
 
 def get_transforms():
     return transforms.Compose([
-        #transforms.Resize((224, 224)),
         transforms.RandomResizedCrop(size=(224,224), scale=(0.5, 1.0)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),

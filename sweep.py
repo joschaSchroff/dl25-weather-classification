@@ -25,6 +25,7 @@ def add_to_json(args):
         json.dump(data, f)
 
 def sweep(pause_time=600, pause_every=10):
+    # sweep configurations
     num_workers = [4]
     accelerator = ['cuda']
     seed = [42]
@@ -47,7 +48,8 @@ def sweep(pause_time=600, pause_every=10):
     save_model_path = ['./models']
     wandb_project = ['sweep-models']
     wandb_entity = ['dl25-weather']
-
+    
+    # sweep
     run_counter = 0
     for lr in learning_rate:
         for lr_g in lr_gamma:

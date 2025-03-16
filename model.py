@@ -66,29 +66,29 @@ class WeatherModel(L.LightningModule):
         }
     
 
-def get_base_model(model_name, num_classes):
-    if model_name == "resnet50":
+def get_base_model(model_key, num_classes):
+    if model_key == "resnet50":
         model = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
         model.fc = nn.Linear(model.fc.in_features, num_classes)
-    elif model_name == "efficientnetb0":
+    elif model_key == "efficientnetb0":
         model = models.efficientnet_b0(weights=EfficientNet_B0_Weights.IMAGENET1K_V1)
         model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
-    elif model_name == "efficientnetb1":
+    elif model_key == "efficientnetb1":
         model = models.efficientnet_b1(weights=EfficientNet_B1_Weights.IMAGENET1K_V1)
         model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
-    elif model_name == "mobilenet":
+    elif model_key == "mobilenet":
         model = models.mobilenet_v2(weights=MobileNet_V2_Weights.IMAGENET1K_V1)
         model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
-    elif model_name == "vit":
+    elif model_key == "vit":
         model = models.vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
         model.heads[0] = nn.Linear(model.heads[0].in_features, num_classes)
-    elif model_name == "swin":
+    elif model_key == "swin":
         model = models.swin_t(Swin_T_Weights.IMAGENET1K_V1)
         model.head = nn.Linear(model.head.in_features, num_classes)
     else:
         raise ValueError("Model not found")
     return model
     
-def get_model(model_name, num_classes, learning_rate, lr_step_size, lr_gamma, class_weights=None):
-    model = get_base_model(model_name, num_classes)
+def get_model(model_key, num_classes, learning_rate, lr_step_size, lr_gamma, class_weights=None):
+    model = get_base_model(model_key, num_classes)
     return WeatherModel(model, learning_rate, num_classes, lr_step_size, lr_gamma, class_weights)

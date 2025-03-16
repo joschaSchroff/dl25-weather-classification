@@ -26,10 +26,13 @@ We used five different model architectures to classify the weather conditions:
 Our trained weights are available [here](https://nextcloud.hpi.de/s/wyayfgaR7yJc8B4) with the password: `XY5oAQPncq`.
 
 ## Results
+More details to the results and our methods can be found in `summary.pdf`
 ![Results](plots/model_performance.png)
 ![Confusion Matrices](plots/confusion_matrices.png)
 
 ## Usage
+### Code
+The full repository is available on [GitHub](https://github.com/joschaSchroff/dl25-weather-classification)
 ### Download the data
 To download the dataset run:
 ```bash

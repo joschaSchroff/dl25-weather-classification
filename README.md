@@ -1,6 +1,6 @@
 # Deep Learning - Weather Classification
 This project was created as the final project for the university course **Deep Learning** at the Hasso Plattner Institute.\
-The goal of this project is to classify weather conditions just given image data using the Weather Phenomenon Database (WEAPD).\
+The goal of this project is to classify weather conditions just given image data using the Weather Phenomenon Database (WEAPD).
 
 ## Data
 The data used in this project is the [Weather Phenomenon Database (WEAPD)](https://www.kaggle.com/datasets/jehanbhathena/weather-dataset/data) which is a dataset of weather images.\
